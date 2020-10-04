@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/admin/paroisse-config</path>
+    <page_callback>CRM_Parametres_Form_ParoisseConfig</page_callback>
+    <title>ParoisseConfig</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>
