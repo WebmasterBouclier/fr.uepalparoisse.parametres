@@ -46,8 +46,9 @@ class CRM_Parametres_Config {
     $this->getCustomField_ministreDetailDiplomes();
     $this->getCustomField_ministreDetailRemunerePar();
     $this->getCustomField_ministreDetailStatut();
+*/    
   }
-*/
+
   public function createTags($tags) {
     // delete default tags
     $defaultCiviTags = [
