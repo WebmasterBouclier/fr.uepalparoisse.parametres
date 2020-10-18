@@ -6,13 +6,18 @@ class CRM_Parametres_Config {
   public function __construct() {
   }
 
+/**********************************************************/
+/* CODE POUR LANCER LA CREATION DES DIFFERENTS PARAMETRES */
+/**********************************************************/
+//Ce code est nécessaire pour la création effective
+
   public function checkConfig() {
     // general settings
     $this->setDateFormat();
     $this->setMoneyFormat();
     $this->setAddressAndDisplayFormat();
     
-    // tags
+    // tags / étiquettes
     $this->createTags(['Intervenant externe', 'Officiels - interreligieux', 'Officiels - pasteurs', 'Officiels - politiques', 'Officiels - Quai Saint Thomas', 'Organisation : Eglises et oeuvres', 'Organisation : Entreprise', 'Organisation :  Partenaire musical']);
 
 
@@ -56,25 +61,20 @@ class CRM_Parametres_Config {
     $this->getCustomField_competencesDetailMusiqueInstrument();
     $this->getCustomField_competencesDetailMusiqueChant();
 
+    // types de membres
+    $this->getMembershipType_Electeur();
+    $this->getMembershipType_InscritEnfant();
+    $this->getMembershipType_AmiParoisse();
+    $this->getMembershipType_PasInteresse();
+
 
     
-/* A TRAVAILLER
-    $this->getCustomField_paroisseDetailTheologie();
-    $this->getCustomField_paroisseDetailInspectionConsistoireReforme();
-    $this->getCustomField_paroisseDetailConsistoireLutherien();
-    $this->getCustomField_paroisseDetailNombreParoissiens();
-    $this->getCustomField_paroisseDetailNombreElecteurs();
-
-    $this->getCustomField_ministreDetailAnneeConsecration();
-    $this->getCustomField_ministreDetailAnneeEntreeMinistere();
-    $this->getCustomField_ministreDetailAnneeEntreePosteActuel();
-    $this->getCustomField_ministreDetailDateCAFP();
-    $this->getCustomField_ministreDetailDiplomes();
-    $this->getCustomField_ministreDetailRemunerePar();
-    $this->getCustomField_ministreDetailStatut();
-*/    
   }
 
+
+/***********************************/
+/* DEBUT DEFINITION DES ETIQUETTES */
+/***********************************/
   public function createTags($tags) {
     // delete default tags
     $defaultCiviTags = [
@@ -112,6 +112,9 @@ class CRM_Parametres_Config {
     }
   }
 
+/**********************************/
+/* DEBUT DEFINITION DES RELATIONS */
+/**********************************/
   public function getRelationshipType_estMembreEluDe() {
     $params = [
       'name_a_b' => 'est_membre_elu_de',
@@ -181,7 +184,6 @@ class CRM_Parametres_Config {
     ];
     return  $this->createOrGetRelationshipType($params);
   }
-
 
   public function getRelationshipType_estDiacreDe() {
     $params = [
@@ -796,7 +798,7 @@ class CRM_Parametres_Config {
 /***********************************************************/
 /* DEBUT DE LA DEFINITION DES CHAMPS DU GROUPE COMPETENCES */
 /***********************************************************/
-/* Compétences Instrument de musique' */  
+/* Compétences Instrument de musique */  
   public function getCustomField_competencesDetailMusiqueInstrument() {
     $params = [
       'custom_group_id' => $this->getCustomGroup_Competences()['id'],
@@ -818,7 +820,7 @@ class CRM_Parametres_Config {
     return $this->createOrGetCustomField($params);
   }
 
-/* Compétences Chant, voix' */  
+/* Compétences Chant, voix */  
   public function getCustomField_competencesDetailMusiqueChant() {
     $params = [
       'custom_group_id' => $this->getCustomGroup_Competences()['id'],
@@ -838,6 +840,93 @@ class CRM_Parametres_Config {
       'in_selector' => '0'
     ];
     return $this->createOrGetCustomField($params);
+  }
+
+/***********************************************/
+/* DEBUT DE LA DEFINITION DES TYPES DE MEMBRES */
+/***********************************************/
+/* Electeur */  
+  public function getMembershipType_Electeur() {
+    $params = [
+      'domain_id' => '1',
+      'name' => 'Electeur·trice',
+      'description' => 'Personne inscrite sur la liste électorale de la paroisse',
+      'member_of_contact_id' => '1', // Contact de référence
+      'financial_type_id' => '2', // Cotisation des Membres
+      'minimum_fee' => '0.000000000',
+      'duration_unit' => 'lifetime',
+      'duration_interval' => '1',
+      'period_type' => 'rolling',
+      'visibility' => 'Admin',
+      'weight' => '1',
+      'auto_renew' => '0',
+      'is_active' => '1',
+      'contribution_type_id' => '2' // Cotisation variable ?
+    ];
+    return $this->createOrGetMembershipType($params);
+  }
+
+/* Inscrit Enfant */  
+  public function getMembershipType_InscritEnfant() {
+    $params = [
+      'domain_id' => '1',
+      'name' => 'Inscrit·e Enfant',
+      'description' => 'Enfant inscrit à la paroisse, sans être électeur',
+      'member_of_contact_id' => '1', // Contact de référence
+      'financial_type_id' => '2', // Cotisation des Membres
+      'minimum_fee' => '0.000000000',
+      'duration_unit' => 'lifetime',
+      'duration_interval' => '1',
+      'period_type' => 'rolling',
+      'visibility' => 'Admin',
+      'weight' => '2',
+      'auto_renew' => '0',
+      'is_active' => '1',
+      'contribution_type_id' => '2' // Cotisation variable ?
+    ];
+    return $this->createOrGetMembershipType($params);
+  }
+
+/* Ami de la paroisse */  
+  public function getMembershipType_AmiParoisse() {
+    $params = [
+      'domain_id' => '1',
+      'name' => 'Ami·e de la paroisse',
+      'description' => 'Personne non inscrite à la paroisse, et participant aux activités',
+      'member_of_contact_id' => '1', // Contact de référence
+      'financial_type_id' => '2', // Cotisation des Membres
+      'minimum_fee' => '0.000000000',
+      'duration_unit' => 'lifetime',
+      'duration_interval' => '1',
+      'period_type' => 'rolling',
+      'visibility' => 'Admin',
+      'weight' => '3',
+      'auto_renew' => '0',
+      'is_active' => '1',
+      'contribution_type_id' => '2' // Cotisation variable ?
+    ];
+    return $this->createOrGetMembershipType($params);
+  }
+
+/* Pas intéressé */  
+  public function getMembershipType_PasInteresse() {
+    $params = [
+      'domain_id' => '1',
+      'name' => 'Pas intéressé·e',
+      'description' => 'Personne pas intéressée par les informations de la paroisse',
+      'member_of_contact_id' => '1', // Contact de référence
+      'financial_type_id' => '2', // Cotisation des Membres
+      'minimum_fee' => '0.000000000',
+      'duration_unit' => 'lifetime',
+      'duration_interval' => '1',
+      'period_type' => 'rolling',
+      'visibility' => 'Admin',
+      'weight' => '2',
+      'auto_renew' => '0',
+      'is_active' => '1',
+      'contribution_type_id' => '2' // Cotisation variable ?
+    ];
+    return $this->createOrGetMembershipType($params);
   }
 
 
@@ -1204,6 +1293,20 @@ class CRM_Parametres_Config {
     return $relType;
   }
 
+/* Création des types de Membres */
+  private function createOrGetMembershipType($params) {
+    try {
+      $memType = civicrm_api3('MembershipType', 'getsingle', [
+        'name' => $params['name'],
+      ]);
+    }
+    catch (Exception $e) {
+      $memType = civicrm_api3('MembershipType', 'create', $params);
+    }
+
+    return $memType;
+  }
+
 /* Création des groupes de Custom Fields */
   private function createOrGetCustomGroup($params) {
     try {
@@ -1274,8 +1377,10 @@ class CRM_Parametres_Config {
 
     return $optionGroup;
   }
-/*********************************/
-/* DEFINITION DES FORMATS DE DATE*/
+/*************************/
+/*  PARAMETRAGES GLOBAUX */
+/*************************/
+/* Définition des formats de date */
   private function setDateFormat() {
     //Civi\Api4\Setting::set()
     civicrm_api4('Setting', 'set', [
@@ -1292,7 +1397,7 @@ class CRM_Parametres_Config {
       'domainId' => 1,
     ]);
   }
-/* DEFINITION DES FORMATS MONETAIRES*/
+/* Définition des formats monétaires */
   private function setMoneyFormat() {
     civicrm_api4('Setting', 'set', [
       'values' => [
@@ -1304,7 +1409,7 @@ class CRM_Parametres_Config {
       ],
     ]);
   }
-/* DEFINITION DES FORMATS D'ADRESSES*/
+/* Définition des formats d'adresses */
   private function setAddressAndDisplayFormat() {
     civicrm_api4('Setting', 'set', [
       'values' => [
