@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.01"?>
 <extension key="fr.uepalparoisse.parametres" type="module">
   <file>parametres</file>
   <name>Paramètres de configuration CiviCRM paroisses</name>

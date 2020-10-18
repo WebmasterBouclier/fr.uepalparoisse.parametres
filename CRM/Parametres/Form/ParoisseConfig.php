@@ -21,7 +21,7 @@ class CRM_Parametres_Form_ParoisseConfig extends CRM_Core_Form {
     $this->addButtons(array(
       array(
         'type' => 'submit',
-        'name' => E::ts('Mettre à jor la configuration'),
+        'name' => E::ts('Mettre à jour la configuration'),
         'isDefault' => TRUE,
       ),
     ));

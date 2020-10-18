@@ -15,7 +15,7 @@ class CRM_Parametres_Config {
     // tags
     $this->createTags(['Intervenant externe', 'Officiels - interreligieux', 'Officiels - pasteurs', 'Officiels - politiques', 'Officiels - Quai Saint Thomas', 'Organisation : Eglises et oeuvres', 'Organisation : Entreprise', 'Organisation :  Partenaire musical']);
 
-/* A TRAVAILLER
+
     // relationships
     $this->getRelationshipType_estMembreEluDe();
     $this->getRelationshipType_estMembreCoopteDe();
@@ -31,8 +31,34 @@ class CRM_Parametres_Config {
     $this->getRelationshipType_estPetitEnfantDe();
     $this->getRelationshipType_estParoissienDe();
 
-    // custom fields
-    $this->getCustomField_paroisseDetailEglise();
+    // custom fields Etat Civil
+    $this->getCustomField_etatCivilDetailNomNaissance();
+    $this->getCustomField_etatCivilDetailLieuNaissance();
+    $this->getCustomField_etatCivilDetailDateMariage();
+    $this->getCustomField_etatCivilDetailParoisseMariage();
+    $this->getCustomField_etatCivilDetailDivorce();
+    $this->getCustomField_etatCivilDetailDateDivorce();
+    $this->getCustomField_etatCivilDetailDateVeuvage();
+    $this->getCustomField_etatCivilDetailDateEnterrement();
+    $this->getCustomField_etatCivilDetailParoisseEnterrement();
+    $this->getCustomField_etatCivilDetailSecuriteSociale();
+    $this->getCustomField_etatCivilDetailGuso();
+    $this->getCustomField_etatCivilDetailFonctionnaire();
+    // custom fields Information Religion
+    $this->getCustomField_religionDetailReligion();
+    $this->getCustomField_religionDetailDatePresentation();
+    $this->getCustomField_religionDetailParoissePresentation();
+    $this->getCustomField_religionDetailDateBapteme();
+    $this->getCustomField_religionDetailParoisseBapteme();
+    $this->getCustomField_religionDetailDateConfirmation();
+    $this->getCustomField_religionDetailParoisseConfirmation();
+    // custom fields Competences
+    $this->getCustomField_competencesDetailMusiqueInstrument();
+    $this->getCustomField_competencesDetailMusiqueChant();
+
+
+    
+/* A TRAVAILLER
     $this->getCustomField_paroisseDetailTheologie();
     $this->getCustomField_paroisseDetailInspectionConsistoireReforme();
     $this->getCustomField_paroisseDetailConsistoireLutherien();
@@ -268,41 +294,22 @@ class CRM_Parametres_Config {
     ];
     return  $this->createOrGetRelationshipType($params);
   }
-/* A TRAVAILLER
-  public function getCustomGroup_ParoisseDetail() {
+/*************************************************/
+/* DEBUT DEFINITION DES GROUPES de CUSTOM FIELDS */
+/*************************************************/
+  public function getCustomGroup_EtatCivil() {
     $params = [
-      'name' => 'paroisse_detail',
-      'title' => 'Paroisse Detail',
-      'extends' => 'Organization',
-      'extends_entity_column_value' => [
-          'paroisse'
-      ],
-      'style' => 'Inline',
-      'collapse_display' => '0',
-      'weight' => '1',
-      'is_active' => '1',
-      'table_name' => 'civicrm_value_paroisse_detail',
-      'is_multiple' => '0',
-      'collapse_adv_display' => '0',
-      'is_reserved' => '0',
-      'is_public' => '0'
-    ];
-    return $this->createOrGetCustomGroup($params);
-  }
-
-  public function getCustomGroup_MinistreDetail() {
-    $params = [
-      'name' => 'ministre_detail',
-      'title' => 'Ministre Detail',
+      'name' => 'etat_civil',
+      'title' => 'Etat Civil',
       'extends' => 'Individual',
-      'extends_entity_column_value' => [
-        'ministre'
-      ],
+      /* ???'extends_entity_column_value' => [
+          'paroisse'
+      ],*/
       'style' => 'Inline',
       'collapse_display' => '0',
       'weight' => '1',
       'is_active' => '1',
-      'table_name' => 'civicrm_value_ministre_detail',
+      'table_name' => 'civicrm_value_etat_civil',
       'is_multiple' => '0',
       'collapse_adv_display' => '0',
       'is_reserved' => '0',
@@ -311,26 +318,537 @@ class CRM_Parametres_Config {
     return $this->createOrGetCustomGroup($params);
   }
 
-  public function getCustomField_ministreDetailAnneeConsecration() {
+  public function getCustomGroup_InformationsReligion() {
     $params = [
-      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
-      'name' => 'annee_consecration',
-      'label' => 'Année de consécration',
-      'data_type' => 'Int',
+      'name' => 'informations_religion',
+      'title' => 'Information Religion',
+      'extends' => 'Individual',
+      /* ??'extends_entity_column_value' => [
+        'ministre'
+      ],*/
+      'style' => 'Inline',
+      'collapse_display' => '0',
+      'weight' => '2',
+      'is_active' => '1',
+      'table_name' => 'civicrm_value_informations_religion',
+      'is_multiple' => '0',
+      'collapse_adv_display' => '0',
+      'is_reserved' => '0',
+      'is_public' => '0'
+    ];
+    return $this->createOrGetCustomGroup($params);
+  }
+
+  public function getCustomGroup_Competences() {
+    $params = [
+      'name' => 'competences',
+      'title' => 'Compétences',
+      'extends' => 'Individual',
+      /* ??'extends_entity_column_value' => [
+        'ministre'
+      ],*/
+      'style' => 'Inline',
+      'collapse_display' => '0',
+      'weight' => '3',
+      'is_active' => '1',
+      'table_name' => 'civicrm_value_competences',
+      'is_multiple' => '0',
+      'collapse_adv_display' => '0',
+      'is_reserved' => '0',
+      'is_public' => '0'
+    ];
+    return $this->createOrGetCustomGroup($params);
+  }
+/* FIN DE LA DEFINITION DES GROUPES de CUSTOM FIELD */
+
+/**********************************************************/
+/* DEBUT DE LA DEFINITION DES CHAMPS DU GROUPE ETAT CIVIL */
+/**********************************************************/
+/* Nom de naissance */
+  public function getCustomField_etatCivilDetailNomNaissance() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'nom_naissance',
+      'label' => 'Nom de naissance',
+      'data_type' => 'String',
       'html_type' => 'Text',
       'is_searchable' => '1',
-      'is_search_range' => '1',
+      'is_search_range' => '0',
       'weight' => '1',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
       'note_rows' => '4',
-      'column_name' => 'annee_consecration',
+      'column_name' => 'nom_naissance',
       'in_selector' => '0'
     ];
     return $this->createOrGetCustomField($params);
   }
 
+/* Lieu de naissance */
+  public function getCustomField_etatCivilDetailLieuNaissance() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'lieu_naissance',
+      'label' => 'Lieu de naissance',
+      'data_type' => 'String',
+      'html_type' => 'Text',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '2',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'lieu_naissance',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Date de mariage */  
+  public function getCustomField_etatCivilDetailDateMariage() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'date_mariage',
+      'label' => 'Date de mariage',
+      'data_type' => 'Date',
+      'html_type' => 'Select Date',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '3',
+      'is_active' => '1',
+      'text_length' => '255',
+      'start_date_years' => '120',
+      'end_date_years' => '5',
+      'date_format' => 'dd/mm/yy',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'date_mariage',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Paroisse de mariage */  
+  public function getCustomField_etatCivilDetailParoisseMariage() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'paroisse_mariage',
+      'label' => 'Paroisse de mariage',
+      'data_type' => 'String',
+      'html_type' => 'Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '4',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'paroisse_mariage',
+      'option_group_id' => $this->getOptionGroup_ListeParoisses()['id'],      
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Divorcé ? */  
+  public function getCustomField_etatCivilDetailDivorce() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'divorce',
+      'label' => 'Divorcé·e ?',
+      'data_type' => 'Boolean',
+      'html_type' => 'Radio',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '5',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'divorce',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Date de divorce */  
+  public function getCustomField_etatCivilDetailDateDivorce() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'date_divorce',
+      'label' => 'Date de divorce',
+      'data_type' => 'Date',
+      'html_type' => 'Select Date',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '6',
+      'is_active' => '1',
+      'text_length' => '255',
+      'start_date_years' => '120',
+      'end_date_years' => '5',
+      'date_format' => 'dd/mm/yy',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'date_divorce',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Date de veuvage */  
+  public function getCustomField_etatCivilDetailDateVeuvage() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'date_veuvage',
+      'label' => 'Date de veuvage',
+      'data_type' => 'Date',
+      'html_type' => 'Select Date',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '7',
+      'is_active' => '1',
+      'text_length' => '255',
+      'start_date_years' => '120',
+      'end_date_years' => '5',
+      'date_format' => 'dd/mm/yy',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'date_veuvage',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Date d\'enterrement */  
+  public function getCustomField_etatCivilDetailDateEnterrement() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'date_enterrement',
+      'label' => 'Date d\'enterrement',
+      'data_type' => 'Date',
+      'html_type' => 'Select Date',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '8',
+      'is_active' => '1',
+      'text_length' => '255',
+      'start_date_years' => '120',
+      'end_date_years' => '5',
+      'date_format' => 'dd/mm/yy',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'date_enterrement',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Paroisse d\'enterrement' */  
+  public function getCustomField_etatCivilDetailParoisseEnterrement() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'paroisse_enterrement',
+      'label' => 'Paroisse d\'enterrement',
+      'data_type' => 'String',
+      'html_type' => 'Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '9',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'paroisse_enterrement',
+      'option_group_id' => $this->getOptionGroup_ListeParoisses()['id'],      
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Numéro de Sécurité Sociale */
+  public function getCustomField_etatCivilDetailSecuriteSociale() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'securite_sociale',
+      'label' => 'Numéro de Sécurité Sociale',
+      'data_type' => 'String',
+      'html_type' => 'Text',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '10',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'securite_sociale',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Numéro de Guso */
+  public function getCustomField_etatCivilDetailGuso() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'guso',
+      'label' => 'Numéro de GUSO',
+      'data_type' => 'String',
+      'html_type' => 'Text',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '11',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'guso',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Status Fonctionnaire ? */  
+  public function getCustomField_etatCivilDetailFonctionnaire() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'fonctionnaire',
+      'label' => 'Fonctionnaire ?',
+      'data_type' => 'Boolean',
+      'html_type' => 'Radio',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '12',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'fonctionnaire',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/*********************************************************************/
+/* DEBUT DE LA DEFINITION DES CHAMPS DU GROUPE INFORMATIONS RELIGION */
+/*********************************************************************/
+/* Religion' */  
+  public function getCustomField_religionDetailReligion() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_InformationsReligion()['id'],
+      'name' => 'religion',
+      'label' => 'Religion',
+      'data_type' => 'String',
+      'html_type' => 'Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '13',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'religion',
+      'option_group_id' => $this->getOptionGroup_Religion()['id'],      
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Date de présentation */  
+  public function getCustomField_religionDetailDatePresentation() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_InformationsReligion()['id'],
+      'name' => 'date_presentation',
+      'label' => 'Date de présentation',
+      'data_type' => 'Date',
+      'html_type' => 'Select Date',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '14',
+      'is_active' => '1',
+      'text_length' => '255',
+      'start_date_years' => '120',
+      'end_date_years' => '5',
+      'date_format' => 'dd/mm/yy',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'date_presentation',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Paroisse de présentation */  
+  public function getCustomField_religionDetailParoissePresentation() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_InformationsReligion()['id'],
+      'name' => 'paroisse_presentation',
+      'label' => 'Paroisse de présentation',
+      'data_type' => 'String',
+      'html_type' => 'Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '15',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'paroisse_presentation',
+      'option_group_id' => $this->getOptionGroup_ListeParoisses()['id'],      
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Date de baptême */  
+  public function getCustomField_religionDetailDateBapteme() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_InformationsReligion()['id'],
+      'name' => 'date_bapteme',
+      'label' => 'Date de baptême',
+      'data_type' => 'Date',
+      'html_type' => 'Select Date',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '16',
+      'is_active' => '1',
+      'text_length' => '255',
+      'start_date_years' => '120',
+      'end_date_years' => '5',
+      'date_format' => 'dd/mm/yy',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'date_bapteme',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Paroisse de baptême */  
+  public function getCustomField_religionDetailParoisseBapteme() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_InformationsReligion()['id'],
+      'name' => 'paroisse_bapteme',
+      'label' => 'Paroisse de baptême',
+      'data_type' => 'String',
+      'html_type' => 'Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '17',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'paroisse_bapteme',
+      'option_group_id' => $this->getOptionGroup_ListeParoisses()['id'],      
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Date de confirmation */  
+  public function getCustomField_religionDetailDateConfirmation() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_InformationsReligion()['id'],
+      'name' => 'date_confirmation',
+      'label' => 'Date de confirmation',
+      'data_type' => 'Date',
+      'html_type' => 'Select Date',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '18',
+      'is_active' => '1',
+      'text_length' => '255',
+      'start_date_years' => '120',
+      'end_date_years' => '5',
+      'date_format' => 'dd/mm/yy',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'date_confirmation',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Paroisse de confirmation */  
+  public function getCustomField_religionDetailParoisseConfirmation() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_InformationsReligion()['id'],
+      'name' => 'paroisse_confirmation',
+      'label' => 'Paroisse de confirmation',
+      'data_type' => 'String',
+      'html_type' => 'Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '19',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'paroisse_confirmation',
+      'option_group_id' => $this->getOptionGroup_ListeParoisses()['id'],      
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/***********************************************************/
+/* DEBUT DE LA DEFINITION DES CHAMPS DU GROUPE COMPETENCES */
+/***********************************************************/
+/* Compétences Instrument de musique' */  
+  public function getCustomField_competencesDetailMusiqueInstrument() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_Competences()['id'],
+      'name' => 'musique_instrument',
+      'label' => 'Musique : instrument',
+      'data_type' => 'String',
+      'html_type' => 'Multi-Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '20',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'musique_instrument',
+      'option_group_id' => $this->getOptionGroup_Instruments()['id'],      
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Compétences Chant, voix' */  
+  public function getCustomField_competencesDetailMusiqueChant() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_Competences()['id'],
+      'name' => 'musique_chant',
+      'label' => 'Musique : chant',
+      'data_type' => 'String',
+      'html_type' => 'Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '21',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'musique_chant',
+      'option_group_id' => $this->getOptionGroup_VoixChant()['id'],      
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+
+
+
+
+
+
+
+
+/* A TRAVAILLER
   public function getCustomField_ministreDetailAnneeEntreeMinistere() {
     $params = [
       'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
@@ -577,59 +1095,101 @@ class CRM_Parametres_Config {
     ];
     return $this->createOrGetCustomField($params);
   }
-
-  public function getOptionGroup_StatutPasteur() {
+*/
+ /*******************************************/
+ /* DEFINITION DES OPTIONS DE CUSTOM FIELDS */ 
+ /*******************************************/
+/* Définition des options pour le champ Paroisse */  
+  public function getOptionGroup_ListeParoisses() {
     $params = [
-      'name' => 'statut_pasteur',
-      'title' => 'Statut pasteur',
+      'name' => 'liste_paroisses',
+      'title' => 'Liste des paroisses',
       'data_type' => 'String',
       'is_reserved' => '0',
       'is_active' => '1',
-      'is_locked' => '0'
+      'is_locked' => '0'  /* PARAMETRE A REVOIR ??*/
     ];
-    $options = ['Actif', 'En congé', 'Retraité'];
+    $options = [
+      'Bischwiller',
+      'Illkirch',
+      'Keskastel',
+      'Riquewihr'
+    ];
     return $this->createOrGetOptionGroup($params, $options, 'Actif');
   }
 
-  public function getOptionGroup_RemunerePar() {
+/* Définition des options pour le Champ Religion */
+  public function getOptionGroup_Religion() {
     $params = [
-      'name' => 'remunere_par',
-      'title' => 'Rémunéré par',
+      'name' => 'religion',
+      'title' => 'Religion',
       'data_type' => 'String',
       'is_reserved' => '0',
       'is_active' => '1',
       'is_locked' => '0'
     ];
-    $options = ['Bureau des cultes', 'ESP'];
+    $options = [
+      'Protestante',
+      'Catholique',
+      'Juive',
+      'Musulmane'];
     return $this->createOrGetOptionGroup($params, $options);
   }
-
-  public function getOptionGroup_Eglises() {
+/* Définition des options pour le Champ Instrument */
+  public function getOptionGroup_Instruments() {
     $params = [
-      'name' => 'eglises',
-      'title' => 'Eglises',
+      'name' => 'intruments',
+      'title' => 'Instruments de musique',
       'data_type' => 'String',
       'is_reserved' => '0',
       'is_active' => '1',
       'is_locked' => '0'
     ];
-    $options = ['EPRAL', 'EPCAAL'];
+    $options = [
+      'Accordéon',
+      'Basson',
+      'Clarinette',
+      'Clavecin',
+      'Contre-basse',
+      'Cor',
+      'Flûte à bec',
+      'Flûte traversière',
+      'Guitare',
+      'Harpe',
+      'Hautbois',
+      'Piano',
+      'Saxophone',
+      'Trompette',
+      'Violon',
+      'Violon alto',
+      'Violoncelle',
+      'Timbale'
+      ];
     return $this->createOrGetOptionGroup($params, $options);
   }
 
-  public function getOptionGroup_Theologie() {
+/* Définition des options pour le Champ Voix / Chant */
+  public function getOptionGroup_VoixChant() {
     $params = [
-      'name' => 'theologies',
-      'title' => 'Théologies',
+      'name' => 'voix_chant',
+      'title' => 'Chant : voix',
       'data_type' => 'String',
       'is_reserved' => '0',
       'is_active' => '1',
       'is_locked' => '0'
     ];
-    $options = ['Réformée', 'Luthérienne'];
+    $options = [
+      'Alto',
+      'Soprane',
+      'Ténor',
+      'Basse'];
     return $this->createOrGetOptionGroup($params, $options);
   }
 
+ /**********************************/
+ /* CREATION DES DIFFERENTS CHAMPS */
+ /**********************************/ 
+/* Création des types de relation */  
   private function createOrGetRelationshipType($params) {
     try {
       $relType = civicrm_api3('RelationshipType', 'getsingle', [
@@ -644,6 +1204,7 @@ class CRM_Parametres_Config {
     return $relType;
   }
 
+/* Création des groupes de Custom Fields */
   private function createOrGetCustomGroup($params) {
     try {
       $customGroup = civicrm_api3('CustomGroup', 'getsingle', [
@@ -656,7 +1217,7 @@ class CRM_Parametres_Config {
 
     return $customGroup;
   }
-
+/* Création des champs dans les Custom Fields */
   private function createOrGetCustomField($params) {
     try {
       $customField = civicrm_api3('CustomField', 'getsingle', [
@@ -670,7 +1231,7 @@ class CRM_Parametres_Config {
 
     return $customField;
   }
-
+/* Création des options dans les champs */
   private function createOrGetOptionGroup($params, $options, $defaultOption = '') {
     // in Development mode we force the recreation of the options
     $recreateOptions = FALSE;
@@ -713,8 +1274,8 @@ class CRM_Parametres_Config {
 
     return $optionGroup;
   }
-*/
-/*VERIFICATION FAITE*/
+/*********************************/
+/* DEFINITION DES FORMATS DE DATE*/
   private function setDateFormat() {
     //Civi\Api4\Setting::set()
     civicrm_api4('Setting', 'set', [
@@ -731,7 +1292,7 @@ class CRM_Parametres_Config {
       'domainId' => 1,
     ]);
   }
-/*VERIFICATION FAITE*/
+/* DEFINITION DES FORMATS MONETAIRES*/
   private function setMoneyFormat() {
     civicrm_api4('Setting', 'set', [
       'values' => [
@@ -743,7 +1304,7 @@ class CRM_Parametres_Config {
       ],
     ]);
   }
-/*VERIFICATION FAITE*/
+/* DEFINITION DES FORMATS D'ADRESSES*/
   private function setAddressAndDisplayFormat() {
     civicrm_api4('Setting', 'set', [
       'values' => [
@@ -754,7 +1315,7 @@ class CRM_Parametres_Config {
         'defaultContactCountry' => 1076,
       ],
     ]);
-/*VERIFICATION FAITE*/
+
     // set email_greeting and postal_greeting (e.g. Chère Mme la pasteure DUPOND, Cher M. PIF)
     $format = '{capture assign=c}{contact.communication_style}{/capture}{capture assign=p}{contact.individual_prefix}{/capture}{if $p=="Mme"}Chère{else}Cher{/if} {if $c=="Familiar"}{contact.first_name}{else}{$p} {contact.formal_title} {contact.last_name}{/if}';
     $sql = "
@@ -770,6 +1331,8 @@ class CRM_Parametres_Config {
         v.value = 1
     ";
     CRM_Core_DAO::executeQuery($sql);
+
+/* A REVOIR */
 
     // see civicrm/admin/setting/preferences/display?reset=1, section "Editing Contacts" (Informations éditables)
     // select everything except Other name and OpenID (= 10, 15)
