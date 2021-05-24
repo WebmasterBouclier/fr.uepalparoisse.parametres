@@ -33,18 +33,23 @@ class CRM_Parametres_Config {
     $this->getRelationshipType_estTresorierDe();
     $this->getRelationshipType_estSecretaireDe();
     $this->getRelationshipType_estAnimateurDe();
-    $this->getRelationshipType_estPetitEnfantDe();
+    $this->getRelationshipType_PetitEnfantDe();
     $this->getRelationshipType_estParoissienDe();
+    $this->getRelationshipType_estReceveurDe();
+    $this->getRelationshipType_estDelegueDe();
+    $this->getRelationshipType_estParrainMarraineDe();
 
     // custom fields Etat Civil
     $this->getCustomField_etatCivilDetailNomNaissance();
     $this->getCustomField_etatCivilDetailLieuNaissance();
     $this->getCustomField_etatCivilDetailDateMariage();
+    $this->getCustomField_etatCivilDetailDateBenedictionNuptiale();
     $this->getCustomField_etatCivilDetailParoisseMariage();
+    $this->getCustomField_etatCivilDetailVersetMariage();
     $this->getCustomField_etatCivilDetailDivorce();
     $this->getCustomField_etatCivilDetailDateDivorce();
     $this->getCustomField_etatCivilDetailDateVeuvage();
-    $this->getCustomField_etatCivilDetailDateEnterrement();
+    $this->getCustomField_etatCivilDetailDateObseques();
     $this->getCustomField_etatCivilDetailParoisseEnterrement();
     $this->getCustomField_etatCivilDetailSecuriteSociale();
     $this->getCustomField_etatCivilDetailGuso();
@@ -55,20 +60,21 @@ class CRM_Parametres_Config {
     $this->getCustomField_religionDetailParoissePresentation();
     $this->getCustomField_religionDetailDateBapteme();
     $this->getCustomField_religionDetailParoisseBapteme();
+    $this->getCustomField_religionDetailVersetBapteme();
     $this->getCustomField_religionDetailDateConfirmation();
     $this->getCustomField_religionDetailParoisseConfirmation();
+    $this->getCustomField_religionDetailVersetConfirmation();    
     // custom fields Competences
     $this->getCustomField_competencesDetailMusiqueInstrument();
     $this->getCustomField_competencesDetailMusiqueChant();
-
+    // custom fields Informations Complémentaires Foyer
+    $this->getCustomField_complements_foyerDetailQuartier();
     // types de membres
     $this->getMembershipType_Electeur();
     $this->getMembershipType_InscritEnfant();
     $this->getMembershipType_AmiParoisse();
     $this->getMembershipType_PasInteresse();
-
-
-    
+   
   }
 
 
@@ -269,14 +275,14 @@ class CRM_Parametres_Config {
     return  $this->createOrGetRelationshipType($params);
   }
 
-  public function getRelationshipType_estPetitEnfantDe() {
+  public function getRelationshipType_PetitEnfantDe() {
     $params = [
-      'name_a_b' => 'est_petit_enfant_de',
-      'label_a_b' => 'est Petit Enfant de',
-      'name_b_a' => 'a_pour_petit_enfant',
-      'label_b_a' => 'a pour Petit Enfant',
+      'name_a_b' => 'petit_enfant_de',
+      'label_a_b' => 'Petit Enfant de',
+      'name_b_a' => 'grand_parent_de',
+      'label_b_a' => 'Grand Parent de',
       'contact_type_a' => 'Individual',
-      'contact_type_b' => 'Organization',
+      'contact_type_b' => 'Individual',
       'is_reserved' => '0',
       'is_active' => '1'
     ];
@@ -296,6 +302,51 @@ class CRM_Parametres_Config {
     ];
     return  $this->createOrGetRelationshipType($params);
   }
+
+  public function getRelationshipType_estReceveurDe() {
+    $params = [
+      'name_a_b' => 'est_receveur_de',
+      'label_a_b' => 'est Receveur·e de',
+      'name_b_a' => 'a_pour_receveur',
+      'label_b_a' => 'a pour Receveur·e',
+      'contact_type_a' => 'Individual',
+      'contact_type_b' => 'Organization',
+      'is_reserved' => '0',
+      'is_active' => '1'
+    ];
+    return  $this->createOrGetRelationshipType($params);
+  }
+
+  public function getRelationshipType_estDelegueDe() {
+    $params = [
+      'name_a_b' => 'est_delegue_de',
+      'label_a_b' => 'est Délégué·e de',
+      'name_b_a' => 'a_pour_delegue',
+      'label_b_a' => 'a pour Délégué·e',
+      'contact_type_a' => 'Individual',
+      'contact_type_b' => 'Organization',
+      'is_reserved' => '0',
+      'is_active' => '1'
+    ];
+    return  $this->createOrGetRelationshipType($params);
+  }
+
+  public function getRelationshipType_estParrainMarraineDe() {
+    $params = [
+      'name_a_b' => 'est_parrain_de',
+      'label_a_b' => 'est Parrain ou Marraine de',
+      'name_b_a' => 'a_pour_parrain',
+      'label_b_a' => 'a pour Parrain ou Marraine',
+      'contact_type_a' => 'Individual',
+      'contact_type_b' => 'Individual',
+      'is_reserved' => '0',
+      'is_active' => '1'
+    ];
+    return  $this->createOrGetRelationshipType($params);
+  }
+
+
+
 /*************************************************/
 /* DEBUT DEFINITION DES GROUPES de CUSTOM FIELDS */
 /*************************************************/
@@ -361,6 +412,29 @@ class CRM_Parametres_Config {
     ];
     return $this->createOrGetCustomGroup($params);
   }
+
+    public function getCustomGroup_ComplementsFoyer() {
+    $params = [
+      'name' => 'complements_foyer',
+      'title' => 'Informations supplémentaires',
+      'extends' => 'Household',
+      /* ???'extends_entity_column_value' => [
+          'paroisse'
+      ],*/
+      'style' => 'Inline',
+      'collapse_display' => '0',
+      'weight' => '1',
+      'is_active' => '1',
+      'table_name' => 'civicrm_value_complements_foyer',
+      'is_multiple' => '0',
+      'collapse_adv_display' => '0',
+      'is_reserved' => '0',
+      'is_public' => '0'
+    ];
+    return $this->createOrGetCustomGroup($params);
+  }
+
+
 /* FIN DE LA DEFINITION DES GROUPES de CUSTOM FIELD */
 
 /**********************************************************/
@@ -432,6 +506,30 @@ class CRM_Parametres_Config {
     return $this->createOrGetCustomField($params);
   }
 
+/* Date de bénédiction nuptiale */  
+  public function getCustomField_etatCivilDetailDateBenedictionNuptiale() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'date_benediction_nuptiale',
+      'label' => 'Date de la bénédiction nuptiale',
+      'data_type' => 'Date',
+      'html_type' => 'Select Date',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '4',
+      'is_active' => '1',
+      'text_length' => '255',
+      'start_date_years' => '120',
+      'end_date_years' => '5',
+      'date_format' => 'dd/mm/yy',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'date_benediction_nuptiale',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
 /* Paroisse de mariage */  
   public function getCustomField_etatCivilDetailParoisseMariage() {
     $params = [
@@ -442,7 +540,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Select',
       'is_searchable' => '1',
       'is_search_range' => '0',
-      'weight' => '4',
+      'weight' => '5',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
@@ -454,6 +552,29 @@ class CRM_Parametres_Config {
     return $this->createOrGetCustomField($params);
   }
 
+/* Verset de mariage */
+  public function getCustomField_etatCivilDetailVersetMariage() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
+      'name' => 'verset_mariage',
+      'label' => 'Verset de mariage',
+      'data_type' => 'Memo',
+      'html_type' => 'TextArea',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '6',
+      'is_active' => '1',
+      'attributes' => 'rows=4, cols=60',
+      'note_columns' => '60',
+      'note_rows' => '1',
+      'column_name' => 'verset_mariage',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+
+
 /* Divorcé ? */  
   public function getCustomField_etatCivilDetailDivorce() {
     $params = [
@@ -464,7 +585,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Radio',
       'is_searchable' => '1',
       'is_search_range' => '0',
-      'weight' => '5',
+      'weight' => '7',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
@@ -485,7 +606,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Select Date',
       'is_searchable' => '1',
       'is_search_range' => '1',
-      'weight' => '6',
+      'weight' => '8',
       'is_active' => '1',
       'text_length' => '255',
       'start_date_years' => '120',
@@ -509,7 +630,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Select Date',
       'is_searchable' => '1',
       'is_search_range' => '1',
-      'weight' => '7',
+      'weight' => '9',
       'is_active' => '1',
       'text_length' => '255',
       'start_date_years' => '120',
@@ -523,17 +644,17 @@ class CRM_Parametres_Config {
     return $this->createOrGetCustomField($params);
   }
 
-/* Date d\'enterrement */  
-  public function getCustomField_etatCivilDetailDateEnterrement() {
+/* Date des obsèques */  
+  public function getCustomField_etatCivilDetailDateObseques() {
     $params = [
       'custom_group_id' => $this->getCustomGroup_EtatCivil()['id'],
-      'name' => 'date_enterrement',
-      'label' => 'Date d\'enterrement',
+      'name' => 'date_obseques',
+      'label' => 'Date des obsèques',
       'data_type' => 'Date',
       'html_type' => 'Select Date',
       'is_searchable' => '1',
       'is_search_range' => '1',
-      'weight' => '8',
+      'weight' => '10',
       'is_active' => '1',
       'text_length' => '255',
       'start_date_years' => '120',
@@ -557,7 +678,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Select',
       'is_searchable' => '1',
       'is_search_range' => '0',
-      'weight' => '9',
+      'weight' => '11',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
@@ -579,7 +700,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Text',
       'is_searchable' => '1',
       'is_search_range' => '0',
-      'weight' => '10',
+      'weight' => '12',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
@@ -600,7 +721,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Text',
       'is_searchable' => '1',
       'is_search_range' => '0',
-      'weight' => '11',
+      'weight' => '13',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
@@ -621,7 +742,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Radio',
       'is_searchable' => '1',
       'is_search_range' => '0',
-      'weight' => '12',
+      'weight' => '14',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
@@ -645,7 +766,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Select',
       'is_searchable' => '1',
       'is_search_range' => '0',
-      'weight' => '13',
+      'weight' => '1',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
@@ -667,7 +788,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Select Date',
       'is_searchable' => '1',
       'is_search_range' => '1',
-      'weight' => '14',
+      'weight' => '2',
       'is_active' => '1',
       'text_length' => '255',
       'start_date_years' => '120',
@@ -691,7 +812,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Select',
       'is_searchable' => '1',
       'is_search_range' => '0',
-      'weight' => '15',
+      'weight' => '3',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
@@ -713,7 +834,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Select Date',
       'is_searchable' => '1',
       'is_search_range' => '1',
-      'weight' => '16',
+      'weight' => '4',
       'is_active' => '1',
       'text_length' => '255',
       'start_date_years' => '120',
@@ -737,13 +858,34 @@ class CRM_Parametres_Config {
       'html_type' => 'Select',
       'is_searchable' => '1',
       'is_search_range' => '0',
-      'weight' => '17',
+      'weight' => '5',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
       'note_rows' => '4',
       'column_name' => 'paroisse_bapteme',
       'option_group_id' => $this->getOptionGroup_ListeParoisses()['id'],      
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Verset de baptême */
+  public function getCustomField_religionDetailVersetBapteme() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_InformationsReligion()['id'],
+      'name' => 'verset_bapteme',
+      'label' => 'Verset de baptême',
+      'data_type' => 'Memo',
+      'html_type' => 'TextArea',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '6',
+      'is_active' => '1',
+      'attributes' => 'rows=4, cols=60',
+      'note_columns' => '60',
+      'note_rows' => '1',
+      'column_name' => 'verset_bapteme',
       'in_selector' => '0'
     ];
     return $this->createOrGetCustomField($params);
@@ -759,7 +901,7 @@ class CRM_Parametres_Config {
       'html_type' => 'Select Date',
       'is_searchable' => '1',
       'is_search_range' => '1',
-      'weight' => '18',
+      'weight' => '7',
       'is_active' => '1',
       'text_length' => '255',
       'start_date_years' => '120',
@@ -783,13 +925,34 @@ class CRM_Parametres_Config {
       'html_type' => 'Select',
       'is_searchable' => '1',
       'is_search_range' => '0',
-      'weight' => '19',
+      'weight' => '8',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
       'note_rows' => '4',
       'column_name' => 'paroisse_confirmation',
       'option_group_id' => $this->getOptionGroup_ListeParoisses()['id'],      
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+/* Verset de confirmation */
+  public function getCustomField_religionDetailVersetConfirmation() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_InformationsReligion()['id'],
+      'name' => 'verset_confirmation',
+      'label' => 'Verset de confirmation',
+      'data_type' => 'Memo',
+      'html_type' => 'TextArea',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '9',
+      'is_active' => '1',
+      'attributes' => 'rows=4, cols=60',
+      'note_columns' => '60',
+      'note_rows' => '1',
+      'column_name' => 'verset_confirmation',
       'in_selector' => '0'
     ];
     return $this->createOrGetCustomField($params);
@@ -841,6 +1004,34 @@ class CRM_Parametres_Config {
     ];
     return $this->createOrGetCustomField($params);
   }
+
+/**********************************************************************************/
+/* DEBUT DE LA DEFINITION DES CHAMPS DU GROUPE INFORMATIONS SUPPLEMENTAIRES FOYER */
+/**********************************************************************************/
+/* Quartier (distribution, visiteurs, ...)' */  
+  public function getCustomField_complements_foyerDetailQuartier() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_ComplementsFoyer()['id'],
+      'name' => 'quartier',
+      'label' => 'Quartier (distribution, visiteurs, ...)',
+      'data_type' => 'String',
+      'html_type' => 'Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '1',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'quartier',
+      'option_group_id' => $this->getOptionGroup_Quartier()['id'],      
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+
+
 
 /***********************************************/
 /* DEBUT DE LA DEFINITION DES TYPES DE MEMBRES */
@@ -931,260 +1122,6 @@ class CRM_Parametres_Config {
 
 
 
-
-
-
-
-
-
-/* A TRAVAILLER
-  public function getCustomField_ministreDetailAnneeEntreeMinistere() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
-      'name' => 'annee_entree_ministere',
-      'label' => 'Année d\'entrée au ministère',
-      'data_type' => 'Int',
-      'html_type' => 'Text',
-      'is_searchable' => '1',
-      'is_search_range' => '1',
-      'weight' => '2',
-      'is_active' => '1',
-      'text_length' => '255',
-      'note_columns' => '60',
-      'note_rows' => '4',
-      'column_name' => 'annee_entree_ministere',
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-
-  public function getCustomField_ministreDetailAnneeEntreePosteActuel() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
-      'name' => 'annee_poste_actuel',
-      'label' => 'Année d\'entrée poste actuel',
-      'data_type' => 'Int',
-      'html_type' => 'Text',
-      'is_searchable' => '1',
-      'is_search_range' => '1',
-      'weight' => '3',
-      'is_active' => '1',
-      'text_length' => '255',
-      'note_columns' => '60',
-      'note_rows' => '4',
-      'column_name' => 'annee_poste_actuel',
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-
-  public function getCustomField_ministreDetailDateCAFP() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
-      'name' => 'date_cafp',
-      'label' => 'Date CAFP',
-      'data_type' => 'Date',
-      'html_type' => 'Select Date',
-      'is_searchable' => '1',
-      'is_search_range' => '1',
-      'weight' => '5',
-      'is_active' => '1',
-      'text_length' => '255',
-      'date_format' => 'dd/mm/yy',
-      'note_columns' => '60',
-      'note_rows' => '4',
-      'column_name' => 'date_cafp',
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-
-  public function getCustomField_ministreDetailDiplomes() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
-      'name' => 'diplomes',
-      'label' => 'Diplômes',
-      'data_type' => 'Memo',
-      'html_type' => 'TextArea',
-      'is_search_range' => '0',
-      'weight' => '6',
-      'attributes' => 'rows=4, cols=60',
-      'is_active' => '1',
-      'note_columns' => '60',
-      'note_rows' => '6',
-      'column_name' => 'diplomes',
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-
-  public function getCustomField_ministreDetailRemunerePar() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
-      'name' => 'remunere_par',
-      'label' => 'Rémunéré par',
-      'data_type' => 'String',
-      'html_type' => 'Select',
-      'is_searchable' => '1',
-      'is_search_range' => '0',
-      'weight' => '7',
-      'is_active' => '1',
-      'text_length' => '255',
-      'note_columns' => '60',
-      'note_rows' => '4',
-      'column_name' => 'remunere_par',
-      'option_group_id' => $this->getOptionGroup_RemunerePar()['id'],
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-
-  public function getCustomField_ministreDetailStatut() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
-      'name' => 'statut',
-      'label' => 'Statut',
-      'data_type' => 'String',
-      'html_type' => 'Select',
-      'is_searchable' => '1',
-      'is_search_range' => '0',
-      'weight' => '8',
-      'is_active' => '1',
-      'text_length' => '255',
-      'note_columns' => '60',
-      'note_rows' => '4',
-      'column_name' => 'statut',
-      'option_group_id' => $this->getOptionGroup_StatutPasteur()['id'],
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-
-  public function getCustomField_paroisseDetailEglise() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
-      'name' => 'eglise',
-      'label' => 'Eglise',
-      'data_type' => 'String',
-      'html_type' => 'Select',
-      'is_searchable' => '1',
-      'is_search_range' => '0',
-      'weight' => '1',
-      'is_active' => '1',
-      'text_length' => '255',
-      'note_columns' => '60',
-      'note_rows' => '4',
-      'column_name' => 'eglise',
-      'option_group_id' => $this->getOptionGroup_Eglises()['id'],
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-
-  public function getCustomField_paroisseDetailTheologie() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
-      'name' => 'theologie',
-      'label' => 'Théologie',
-      'data_type' => 'String',
-      'html_type' => 'CheckBox',
-      'is_searchable' => '1',
-      'is_search_range' => '0',
-      'weight' => '2',
-      'is_active' => '1',
-      'options_per_line' => '1',
-      'text_length' => '255',
-      'note_columns' => '60',
-      'note_rows' => '4',
-      'column_name' => 'theologie',
-      'option_group_id' => $this->getOptionGroup_Theologie()['id'],
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-
-  public function getCustomField_paroisseDetailInspectionConsistoireReforme() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
-      'name' => 'inspection_consistoire_reforme',
-      'label' => 'Inspection / Consistoire réformé',
-      'data_type' => 'ContactReference',
-      'html_type' => 'Autocomplete-Select',
-      'is_searchable' => '1',
-      'is_search_range' => '0',
-      'weight' => '3',
-      'is_active' => '1',
-      'text_length' => '255',
-      'note_columns' => '60',
-      'note_rows' => '4',
-      'column_name' => 'inspection_consistoire_reforme',
-      'filter' => 'action=get&contact_sub_type=inspection_consistoire_reforme',
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-
-  public function getCustomField_paroisseDetailConsistoireLutherien() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
-      'name' => 'consistoire_lutherien',
-      'label' => 'Consistoire luthérien',
-      'data_type' => 'ContactReference',
-      'html_type' => 'Autocomplete-Select',
-      'is_searchable' => '1',
-      'is_search_range' => '0',
-      'weight' => '4',
-      'is_active' => '1',
-      'text_length' => '255',
-      'note_columns' => '60',
-      'note_rows' => '4',
-      'column_name' => 'consistoire_lutherien',
-      'filter' => 'action=get&contact_sub_type=consistoire_lutherien',
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-
-  public function getCustomField_paroisseDetailNombreParoissiens() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
-      'name' => 'nombre_paroissiens',
-      'label' => 'Nombre de paroissiens',
-      'data_type' => 'Int',
-      'html_type' => 'Text',
-      'is_searchable' => '1',
-      'is_search_range' => '1',
-      'weight' => '5',
-      'is_active' => '1',
-      'text_length' => '255',
-      'note_columns' => '60',
-      'note_rows' => '4',
-      'column_name' => 'nombre_paroissiens',
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-
-  public function getCustomField_paroisseDetailNombreElecteurs() {
-    $params = [
-      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
-      'name' => 'nombre_electeurs',
-      'label' => 'Nombre d\'électeurs',
-      'data_type' => 'Int',
-      'html_type' => 'Text',
-      'is_searchable' => '1',
-      'is_search_range' => '1',
-      'weight' => '6',
-      'is_active' => '1',
-      'text_length' => '255',
-      'note_columns' => '60',
-      'note_rows' => '4',
-      'column_name' => 'nombre_electeurs',
-      'in_selector' => '0'
-    ];
-    return $this->createOrGetCustomField($params);
-  }
-*/
  /*******************************************/
  /* DEFINITION DES OPTIONS DE CUSTOM FIELDS */ 
  /*******************************************/
@@ -1202,7 +1139,10 @@ class CRM_Parametres_Config {
       'Bischwiller',
       'Illkirch',
       'Keskastel',
-      'Riquewihr'
+      'Riquewihr',
+      'Strasbourg - Le Bouclier',
+      'Strasbourg - Saint Guillaume',
+      'Autres'
     ];
     return $this->createOrGetOptionGroup($params, $options, 'Actif');
   }
@@ -1227,7 +1167,7 @@ class CRM_Parametres_Config {
 /* Définition des options pour le Champ Instrument */
   public function getOptionGroup_Instruments() {
     $params = [
-      'name' => 'intruments',
+      'name' => 'instruments',
       'title' => 'Instruments de musique',
       'data_type' => 'String',
       'is_reserved' => '0',
@@ -1246,6 +1186,7 @@ class CRM_Parametres_Config {
       'Guitare',
       'Harpe',
       'Hautbois',
+      'Orgue',
       'Piano',
       'Saxophone',
       'Trompette',
@@ -1274,6 +1215,26 @@ class CRM_Parametres_Config {
       'Basse'];
     return $this->createOrGetOptionGroup($params, $options);
   }
+
+/* Définition des options pour le Champ Quartier (définitions de départ) */
+  public function getOptionGroup_Quartier() {
+    $params = [
+      'name' => 'quartier',
+      'title' => 'Quartier (distribution, visiteurs, ....)',
+      'data_type' => 'String',
+      'is_reserved' => '0',
+      'is_active' => '1',
+      'is_locked' => '0'
+    ];
+    $options = [
+      'Nord',
+      'Sud',
+      'Est',
+      'Ouest'];
+    return $this->createOrGetOptionGroup($params, $options);
+  }
+
+
 
  /**********************************/
  /* CREATION DES DIFFERENTS CHAMPS */

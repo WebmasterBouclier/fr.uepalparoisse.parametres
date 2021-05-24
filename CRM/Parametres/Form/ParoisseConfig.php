@@ -37,11 +37,20 @@ class CRM_Parametres_Form_ParoisseConfig extends CRM_Core_Form {
     CRM_Core_Session::setStatus(E::ts('You picked color "%1"', array(
       1 => $options[$values['favorite_color']],
     )));*/
-    
+
+    // instructions de lancement du paramétrage    
     $config = new CRM_Parametres_Config();
     $config->checkConfig();
 
+    // instructions de lancement des exceptions
+    $exceptions = new CRM_Parametres_Exceptions();
+    $exceptions->setExceptions();
+    
+
+
     CRM_Core_Session::setStatus('La configuration a été mise à jour', '', 'success');
+
+    /*CRM_Core_Session::setStatus('Les exceptions ont également été configurées', '', 'success');*/
 
     parent::postProcess();
   }
